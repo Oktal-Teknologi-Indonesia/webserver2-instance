@@ -1,6 +1,7 @@
 document.addEventListener('deviceready', function() {
     // Get the IP address
     getIpAddress();
+    checkAndRequestPermissions()
     webserver.onRequest(
         function(request) {
             console.log("We got a request: ", request.path);

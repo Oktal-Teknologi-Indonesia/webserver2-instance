@@ -15,6 +15,7 @@
   "devDependencies": {
     "cordova-android": "^13.0.0",
     "cordova-plugin-android-permissions": "^1.1.5",
+    "cordova-plugin-device": "^2.1.0",
     "cordova-plugin-file": "^8.1.0",
     "cordova-plugin-network-information": "^3.0.0",
     "cordova-plugin-networkinterface": "^2.2.0",
@@ -26,7 +27,8 @@
       "cordova-plugin-file": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-networkinterface": {},
-      "cordova-plugin-webserver-enhanced": {}
+      "cordova-plugin-webserver-enhanced": {},
+      "cordova-plugin-device": {}
     },
     "platforms": [
       "android"
