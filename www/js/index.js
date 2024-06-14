@@ -103,37 +103,41 @@ function getIpAddress() {
 
 function checkAndRequestPermissions() {
     var permissions = cordova.plugins.permissions;
-    permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, function(status) {
-        if (!status.hasPermission) {
-            permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, function(status) {
-                console.log("Requesting permission...");
-                if (!status.hasPermission) {
-                    document.getElementById('status').textContent = 'Permission denied for READ_EXTERNAL_STORAGE';
-                    return;
-                }
-            }, function() {
-                document.getElementById('status').textContent = 'Permission request failed';
-            });
-        }
-    });
+    
 
-    permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
-        if (!status.hasPermission) {
-            permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
-                if (!status.hasPermission) {
-                    document.getElementById('status').textContent = 'Permission denied for WRITE_EXTERNAL_STORAGE';
-                    return;
-                }
-            }, function() {
-                document.getElementById('status').textContent = 'Permission request failed';
-            });
-        }
-    });
+    // permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+    //     if (!status.hasPermission) {
+    //         permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(status) {
+    //             if (!status.hasPermission) {
+    //                 document.getElementById('status').textContent = 'Permission denied for WRITE_EXTERNAL_STORAGE';
+    //                 return;
+    //             }
+    //         }, function() {
+    //             document.getElementById('status').textContent = 'Permission request failed';
+    //         });
+    //     }
+    // });
 
     if (cordova.platformId === 'android' && parseInt(device.version) >= 11) {
-        permissions.hasPermission("android.permission.READ_EXTERNAL_STORAGE", function(status) {
+        permissions.checkPermission(
+            permissions.READ_EXTERNAL_STORAGE,
+            function(status) {
+                if (!status.hasPermission) {
+                    document.getElementById('status').textContent = 'Requesting Permission...';
+                    requestStoragePermission(permissions);
+                    // return;
+                }
+            },
+            function() {
+                document.getElementById('status').textContent = 'Permission request failed';
+            }
+        );
+
+    }else{
+        permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, function(status) {
             if (!status.hasPermission) {
-                permissions.requestPermission("android.permission.READ_EXTERNAL_STORAGE", function(status) {
+                permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, function(status) {
+                    console.log("Requesting permission...");
                     if (!status.hasPermission) {
                         document.getElementById('status').textContent = 'Permission denied for READ_EXTERNAL_STORAGE';
                         return;
@@ -146,4 +150,20 @@ function checkAndRequestPermissions() {
     }
 
     document.getElementById('status').textContent = 'All permissions granted';
+}
+
+function requestStoragePermission(permissions) {
+    permissions.requestPermission(
+        permissions.READ_EXTERNAL_STORAGE, // or WRITE_EXTERNAL_STORAGE
+        function (status) {
+            if (status.hasPermission) {
+                document.getElementById('status').textContent = 'Permission granted for MANAGE_EXTERNAL_STORAGE';
+            } else {
+                console.warn("User denied storage permission");
+            }
+        },
+        function (error) {
+            console.error("Error requesting permission: " + error);
+        }
+    );
 }
